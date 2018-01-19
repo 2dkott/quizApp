@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">QuizApp</string>
+    <string name="quiz_name">Star Wars not very seriouse quiz</string>
+    <string name="user_name_field_text">Inter your name, master</string>
+    <string name="tag_question">question</string>
+    <string name="tag_question_image">question_image</string>
+    <string name="tag_question_radio_button_group">question_radio_button_group</string>
+    <string name="tag_question_checkbox_group">question_checkbox_group</string>
+</resources>
