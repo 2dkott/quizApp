@@ -35,13 +35,30 @@ public class MainActivity extends AppCompatActivity {
                                            }}));
 
         questionList.add(new QuestionBlock(getString(R.string.q_2_text)
-                , getString(R.string.q_2_correct_answear)
-                , new ArrayList<String>(){{
-            for(String str : getResources().getStringArray(R.array.q_2_wrong_answears)) {
-                add(str);
-            }
-        }}));
-
+                                            , getString(R.string.q_2_correct_answear)
+                                            , new ArrayList<String>(){{
+                                                for(String str : getResources().getStringArray(R.array.q_2_wrong_answears)) {
+                                                    add(str);
+                                                }
+                                            }}));
+        questionList.add(new QuestionBlock(getString(R.string.q_3_text)
+                                           , new ArrayList<String>(){{
+                                               for(String str : getResources().getStringArray(R.array.q_3_correct_answears)) {
+                                                   add(str);
+                                               }
+                                           }}
+                                           , new ArrayList<String>(){{
+                                               for(String str : getResources().getStringArray(R.array.q_3_wrong_answears)) {
+                                                   add(str);
+                                               }
+                                           }}));
+        questionList.add(new QuestionBlock(getString(R.string.q_4_text)
+                                            , getString(R.string.q_4_correct_answear)
+                                            , new ArrayList<String>(){{
+                                            for(String str : getResources().getStringArray(R.array.q_4_wrong_answears)) {
+                                                add(str);
+                                            }
+                                            }}));
 
         for(QuestionBlock block: questionList){
             block.build(this, quizBody);
