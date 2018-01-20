@@ -9,8 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin ="@dimen/question_margin"
+        android:padding="@dimen/question_margin"
         android:text="Test question here?"
         android:textColor="@color/question"
+        android:background="@color/question_text_background"
         android:textStyle="bold"
         />
     <LinearLayout
