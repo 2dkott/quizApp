@@ -6,4 +6,16 @@
     <string name="tag_question_image">question_image</string>
     <string name="tag_question_radio_button_group">question_radio_button_group</string>
     <string name="tag_question_checkbox_group">question_checkbox_group</string>
+    <string name="q_1_text">What is the story of Star Wars?</string>
+    <string name="q_1_correct_answear">The prostitution of the Jedi and the Sith</string>
+    <string-array name="q_1_wrong_answears">
+        <item>The struggle between the Sun and Alpha Centauri.</item>
+        <item>The fight between Bruce Willis and Mad Damond.</item>
+    </string-array>
+    <string name="q_2_text">Who is Darth Vader</string>
+    <string name="q_2_correct_answear">A powerful Sith Lord.</string>
+    <string-array name="q_2_wrong_answears">
+        <item>A Cylon from Battlestar Galactica</item>
+        <item>A Cyber Ninja-Samurai</item>
+    </string-array>
 </resources>

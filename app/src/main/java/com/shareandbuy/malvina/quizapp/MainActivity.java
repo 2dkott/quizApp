@@ -26,24 +26,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         LinearLayout quizBody = (LinearLayout) findViewById(R.id.quizbody);
 
-        questionList.add(new QuestionBlock("What is my name?"
-                                           , "Konstantin"
+        questionList.add(new QuestionBlock(getString(R.string.q_1_text)
+                                           , getString(R.string.q_1_correct_answear)
                                            , new ArrayList<String>(){{
-                                               add("Vasya");
-                                               add("Petya");
+                                               for(String str : getResources().getStringArray(R.array.q_1_wrong_answears)) {
+                                                   add(str);
+                                               }
                                            }}));
-        questionList.add(new QuestionBlock("What is my name?"
-                , "Konstantin"
+
+        questionList.add(new QuestionBlock(getString(R.string.q_2_text)
+                , getString(R.string.q_2_correct_answear)
                 , new ArrayList<String>(){{
-            add("Vasya");
-            add("Petya");
+            for(String str : getResources().getStringArray(R.array.q_2_wrong_answears)) {
+                add(str);
+            }
         }}));
-        questionList.add(new QuestionBlock("What is my name?"
-                , "Konstantin"
-                , new ArrayList<String>(){{
-            add("Vasya");
-            add("Petya");
-        }}));
+
 
         for(QuestionBlock block: questionList){
             block.build(this, quizBody);
