@@ -78,27 +78,27 @@ public class MainActivity extends AppCompatActivity {
 
 class QuestionBlock{
     String question;
-    String correctAnswear;
-    ArrayList<String> correctAnswearList;
-    ArrayList<String> wrongAnswearsList;
+    String correctAnswer;
+    ArrayList<String> correctAnswerList;
+    ArrayList<String> wrongAnswersList;
     boolean isRadioButton = false;
     boolean isCheckBox = false;
-    Answears answears;
+    Answers answears;
     LinearLayout questionLayout;
     int imageId = 0;
     TextView questionTextView;
 
     QuestionBlock(String question, String correctAnswear, ArrayList<String> wrongAnswearsList){
         this.question = question;
-        this.correctAnswear = correctAnswear;
-        this.wrongAnswearsList = wrongAnswearsList;
+        this.correctAnswer = correctAnswear;
+        this.wrongAnswersList = wrongAnswearsList;
         this.isRadioButton = true;
     }
 
     QuestionBlock(String question, ArrayList<String> correctAnswearList, ArrayList<String> wrongAnswearsList){
         this.question = question;
-        this.correctAnswearList = correctAnswearList;
-        this.wrongAnswearsList = wrongAnswearsList;
+        this.correctAnswerList = correctAnswearList;
+        this.wrongAnswersList = wrongAnswearsList;
         this.isCheckBox = true;
     }
 
@@ -110,7 +110,7 @@ class QuestionBlock{
     void build(Context context, LinearLayout quizbody){
         //Define view we need to build a question
         this.questionLayout = (LinearLayout)LayoutInflater.from(context).inflate(R.layout.question_layout, null);
-        ArrayList<String> answearsList = this.wrongAnswearsList;
+        ArrayList<String> answearsList = this.wrongAnswersList;
         this.questionTextView = (TextView)questionLayout.findViewWithTag(context.getString(R.string.tag_question));
         this.questionTextView.setText(this.question);
         ImageView image = (ImageView)questionLayout.findViewWithTag(context.getString(R.string.tag_question_image));
@@ -118,13 +118,13 @@ class QuestionBlock{
             image.setImageResource(this.imageId);
         }
         if(this.isRadioButton) {
-            answearsList.add(this.correctAnswear);
-            this.answears = new Answears((RadioGroup)questionLayout.findViewWithTag(context.getString(R.string.tag_question_radio_button_group))
+            answearsList.add(this.correctAnswer);
+            this.answears = new Answers((RadioGroup)questionLayout.findViewWithTag(context.getString(R.string.tag_question_radio_button_group))
                                    , answearsList);
         }
         if(this.isCheckBox) {
-            answearsList.addAll(correctAnswearList);
-            this.answears = new Answears((LinearLayout)questionLayout.findViewWithTag(context.getString(R.string.tag_question_checkbox_group))
+            answearsList.addAll(correctAnswerList);
+            this.answears = new Answers((LinearLayout)questionLayout.findViewWithTag(context.getString(R.string.tag_question_checkbox_group))
                                     , answearsList);
         }
         //Include question layout to body of quiz layout
@@ -135,7 +135,7 @@ class QuestionBlock{
         Context context = this.questionLayout.getContext();
         Resources res = context.getResources();
         if(this.isRadioButton){
-            if(this.answears.compareChecked(this.correctAnswear)){
+            if(this.answears.compareChecked(this.correctAnswer)){
                 this.questionTextView.setBackgroundColor(res.getColor(R.color.correct_answear_color));
             }
             else{
@@ -143,7 +143,7 @@ class QuestionBlock{
             }
         }
         if(this.isCheckBox){
-            if(this.answears.compareChecked(this.correctAnswearList)){
+            if(this.answears.compareChecked(this.correctAnswerList)){
                 this.questionTextView.setBackgroundColor(res.getColor(R.color.correct_answear_color));
             }
             else{
@@ -153,7 +153,7 @@ class QuestionBlock{
     }
 }
 
-class Answears {
+class Answers {
 
     RadioGroup radioGroup = null;
     LinearLayout checkboxGroup = null;
@@ -161,34 +161,34 @@ class Answears {
     ArrayList<RadioButton> radioButtonList;
     ArrayList<CheckBox> checkBoxList;
 
-    Answears(RadioGroup group, ArrayList<String> answears){
+    Answers(RadioGroup group, ArrayList<String> answers){
         this.radioButtonList = new ArrayList<RadioButton>();
         this.context = group.getContext();
         this.radioGroup = group;
-        for (String answear : answears) {
+        for (String answer : answers) {
             RadioButton temp_button = (RadioButton)LayoutInflater.from(context).inflate(R.layout.radio_button_view, null);
-            temp_button.setText(answear);
+            temp_button.setText(answer);
             this.radioButtonList.add(temp_button);
             group.addView(temp_button);
         }
     }
 
-    Answears(LinearLayout group, ArrayList<String> answears){
+    Answers(LinearLayout group, ArrayList<String> answers){
         this.checkBoxList = new ArrayList<CheckBox>();
         this.context = group.getContext();
         this.checkboxGroup = group;
-        for (String answear : answears) {
+        for (String answer : answers) {
             CheckBox temp_checkBox = (CheckBox)LayoutInflater.from(context).inflate(R.layout.checkbox_view, null);
-            temp_checkBox.setText(answear);
+            temp_checkBox.setText(answer);
             group.addView(temp_checkBox);
             this.checkBoxList.add(temp_checkBox);
         }
     }
 
-    boolean compareChecked(String correctAnswear){
+    boolean compareChecked(String correctAnswer){
         for (RadioButton button : this.radioButtonList){
             if (button.isChecked()) {
-                if (button.getText().toString().equals(correctAnswear)) {
+                if (button.getText().toString().equals(correctAnswer)) {
                     return true;
                 }
             }
@@ -196,7 +196,7 @@ class Answears {
         return false;
     }
 
-    boolean compareChecked(ArrayList<String> correctAnswears){
+    boolean compareChecked(ArrayList<String> correctAnswers){
         ArrayList<String> checkedAnswearsList = new ArrayList<String>();
         for (CheckBox checkBox : this.checkBoxList) {
             if (checkBox.isChecked()) {
@@ -204,8 +204,8 @@ class Answears {
             }
         }
         Collections.sort(checkedAnswearsList);
-        Collections.sort(correctAnswears);
-        if(checkedAnswearsList.equals(correctAnswears)){
+        Collections.sort(correctAnswers);
+        if(checkedAnswearsList.equals(correctAnswers)){
             return true;
         }
         return false;
