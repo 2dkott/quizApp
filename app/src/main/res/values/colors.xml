@@ -2,7 +2,12 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#FFC107</color>
     <color name="correct_answear_color">#81C784</color>
     <color name="wrong_answear_color">#FF7043</color>
+    <color name="wrong_answear_text">#FFFFFF</color>
+    <color name="title_text">#FFEB3B</color>
+    <color name="title_background">#000000</color>
+    <color name="question">#000000</color>
+    <color name="question_text_background">#FFC107</color>
 </resources>
