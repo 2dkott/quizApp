@@ -3,12 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_marginBottom="5dp">
+    android:layout_marginBottom="@dimen/question_margin">
     <TextView
         android:tag="@string/tag_question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin ="@dimen/question_margin"
         android:text="Test question here?"
+        android:textColor="@color/question"
+        android:textStyle="bold"
         />
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,9 +19,10 @@
         android:orientation="horizontal">
         <ImageView
             android:tag="@string/tag_question_image"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="center_vertical"/>
+            android:layout_width="@dimen/question_image_size"
+            android:layout_height="@dimen/question_image_size"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/question_margin"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
