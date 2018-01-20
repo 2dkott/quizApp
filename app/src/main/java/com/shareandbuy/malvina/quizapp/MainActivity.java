@@ -100,6 +100,8 @@ class QuestionBlock{
         //Define view we need to build a question
         this.questionLayout = (LinearLayout)LayoutInflater.from(context).inflate(R.layout.question_layout, null);
         ArrayList<String> answearsList = this.wrongAnswearsList;
+        TextView questionText = (TextView)questionLayout.findViewWithTag(context.getString(R.string.tag_question));
+        questionText.setText(this.question);
         if(isRadioButton) {
             answearsList.add(this.correctAnswear);
             answears = new Answears((RadioGroup)questionLayout.findViewWithTag(context.getString(R.string.tag_question_radio_button_group))
@@ -119,6 +121,14 @@ class QuestionBlock{
         Resources res = context.getResources();
         if(isRadioButton){
             if(answears.compareChecked(this.correctAnswear)){
+                this.questionLayout.setBackgroundColor(res.getColor(R.color.correct_answear_color));
+            }
+            else{
+                this.questionLayout.setBackgroundColor(res.getColor(R.color.wrong_answear_color));
+            }
+        }
+        if(isCheckBox){
+            if(answears.compareChecked(this.correctAnswearList)){
                 this.questionLayout.setBackgroundColor(res.getColor(R.color.correct_answear_color));
             }
             else{
