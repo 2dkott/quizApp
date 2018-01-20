@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">QuizApp</string>
     <string name="quiz_name">NOT A VERY SERIOUS QIUZ</string>
-    <string name="user_name_field_text">Inter your name, master</string>
+    <string name="user_name_field_text">Type your name, master...</string>
     <string name="tag_question">question</string>
     <string name="tag_question_image">question_image</string>
     <string name="tag_question_radio_button_group">question_radio_button_group</string>
     <string name="tag_question_checkbox_group">question_checkbox_group</string>
+    <string name="verify">verify</string>
     <string name="q_1_text">What is the story of Star Wars?</string>
     <string name="q_1_correct_answear">The prostitution of the Jedi and the Sith</string>
     <string-array name="q_1_wrong_answears">
