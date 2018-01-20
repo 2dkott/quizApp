@@ -40,7 +40,8 @@
             android:singleLine="true"
             android:imeOptions="actionDone"
             android:hint="@string/user_name_field_text"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:textAllCaps="true"/>
 
         <LinearLayout
             android:id="@+id/quizbody"
