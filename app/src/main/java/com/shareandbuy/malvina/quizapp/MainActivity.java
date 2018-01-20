@@ -32,7 +32,8 @@ public class MainActivity extends AppCompatActivity {
                                                for(String str : getResources().getStringArray(R.array.q_1_wrong_answears)) {
                                                    add(str);
                                                }
-                                           }}));
+                                           }}).addImage(R.drawable.q_1_image)
+                                           );
 
         questionList.add(new QuestionBlock(getString(R.string.q_2_text)
                                             , getString(R.string.q_2_correct_answear)
@@ -40,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
                                                 for(String str : getResources().getStringArray(R.array.q_2_wrong_answears)) {
                                                     add(str);
                                                 }
-                                            }}));
+                                            }}).addImage(R.drawable.q_2_image)
+                                            );
         questionList.add(new QuestionBlock(getString(R.string.q_3_text)
                                            , new ArrayList<String>(){{
                                                for(String str : getResources().getStringArray(R.array.q_3_correct_answears)) {
@@ -51,14 +53,16 @@ public class MainActivity extends AppCompatActivity {
                                                for(String str : getResources().getStringArray(R.array.q_3_wrong_answears)) {
                                                    add(str);
                                                }
-                                           }}));
+                                           }}).addImage(R.drawable.q_3_image)
+                                           );
         questionList.add(new QuestionBlock(getString(R.string.q_4_text)
-                                            , getString(R.string.q_4_correct_answear)
-                                            , new ArrayList<String>(){{
-                                            for(String str : getResources().getStringArray(R.array.q_4_wrong_answears)) {
-                                                add(str);
-                                            }
-                                            }}));
+                                           , getString(R.string.q_4_correct_answear)
+                                           , new ArrayList<String>(){{
+                                               for(String str : getResources().getStringArray(R.array.q_4_wrong_answears)) {
+                                                   add(str);
+                                               }
+                                           }}).addImage(R.drawable.q_4_image)
+                                           );
 
         for(QuestionBlock block: questionList){
             block.build(this, quizBody);
@@ -81,19 +85,25 @@ class QuestionBlock{
     boolean isCheckBox = false;
     Answears answears;
     LinearLayout questionLayout;
+    int imageId = 0;
 
     QuestionBlock(String question, String correctAnswear, ArrayList<String> wrongAnswearsList){
         this.question = question;
         this.correctAnswear = correctAnswear;
         this.wrongAnswearsList = wrongAnswearsList;
-        isRadioButton = true;
+        this.isRadioButton = true;
     }
 
     QuestionBlock(String question, ArrayList<String> correctAnswearList, ArrayList<String> wrongAnswearsList){
         this.question = question;
         this.correctAnswearList = correctAnswearList;
         this.wrongAnswearsList = wrongAnswearsList;
-        isCheckBox = true;
+        this.isCheckBox = true;
+    }
+
+    QuestionBlock addImage(int imageId){
+        this.imageId = imageId;
+        return this;
     }
 
     void build(Context context, LinearLayout quizbody){
@@ -102,14 +112,18 @@ class QuestionBlock{
         ArrayList<String> answearsList = this.wrongAnswearsList;
         TextView questionText = (TextView)questionLayout.findViewWithTag(context.getString(R.string.tag_question));
         questionText.setText(this.question);
-        if(isRadioButton) {
+        ImageView image = (ImageView)questionLayout.findViewWithTag(context.getString(R.string.tag_question_image));
+        if(this.imageId!=0){
+            image.setImageResource(this.imageId);
+        }
+        if(this.isRadioButton) {
             answearsList.add(this.correctAnswear);
-            answears = new Answears((RadioGroup)questionLayout.findViewWithTag(context.getString(R.string.tag_question_radio_button_group))
+            this.answears = new Answears((RadioGroup)questionLayout.findViewWithTag(context.getString(R.string.tag_question_radio_button_group))
                                    , answearsList);
         }
-        if(isCheckBox) {
+        if(this.isCheckBox) {
             answearsList.addAll(correctAnswearList);
-            answears = new Answears((LinearLayout)questionLayout.findViewWithTag(context.getString(R.string.tag_question_checkbox_group))
+            this.answears = new Answears((LinearLayout)questionLayout.findViewWithTag(context.getString(R.string.tag_question_checkbox_group))
                                     , answearsList);
         }
         //Include question layout to body of quiz layout
@@ -119,16 +133,16 @@ class QuestionBlock{
     void verify(){
         Context context = this.questionLayout.getContext();
         Resources res = context.getResources();
-        if(isRadioButton){
-            if(answears.compareChecked(this.correctAnswear)){
+        if(this.isRadioButton){
+            if(this.answears.compareChecked(this.correctAnswear)){
                 this.questionLayout.setBackgroundColor(res.getColor(R.color.correct_answear_color));
             }
             else{
                 this.questionLayout.setBackgroundColor(res.getColor(R.color.wrong_answear_color));
             }
         }
-        if(isCheckBox){
-            if(answears.compareChecked(this.correctAnswearList)){
+        if(this.isCheckBox){
+            if(this.answears.compareChecked(this.correctAnswearList)){
                 this.questionLayout.setBackgroundColor(res.getColor(R.color.correct_answear_color));
             }
             else{
