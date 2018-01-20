@@ -86,6 +86,7 @@ class QuestionBlock{
     Answears answears;
     LinearLayout questionLayout;
     int imageId = 0;
+    TextView questionTextView;
 
     QuestionBlock(String question, String correctAnswear, ArrayList<String> wrongAnswearsList){
         this.question = question;
@@ -110,8 +111,8 @@ class QuestionBlock{
         //Define view we need to build a question
         this.questionLayout = (LinearLayout)LayoutInflater.from(context).inflate(R.layout.question_layout, null);
         ArrayList<String> answearsList = this.wrongAnswearsList;
-        TextView questionText = (TextView)questionLayout.findViewWithTag(context.getString(R.string.tag_question));
-        questionText.setText(this.question);
+        this.questionTextView = (TextView)questionLayout.findViewWithTag(context.getString(R.string.tag_question));
+        this.questionTextView.setText(this.question);
         ImageView image = (ImageView)questionLayout.findViewWithTag(context.getString(R.string.tag_question_image));
         if(this.imageId!=0){
             image.setImageResource(this.imageId);
@@ -135,18 +136,18 @@ class QuestionBlock{
         Resources res = context.getResources();
         if(this.isRadioButton){
             if(this.answears.compareChecked(this.correctAnswear)){
-                this.questionLayout.setBackgroundColor(res.getColor(R.color.correct_answear_color));
+                this.questionTextView.setBackgroundColor(res.getColor(R.color.correct_answear_color));
             }
             else{
-                this.questionLayout.setBackgroundColor(res.getColor(R.color.wrong_answear_color));
+                this.questionTextView.setBackgroundColor(res.getColor(R.color.wrong_answear_color));
             }
         }
         if(this.isCheckBox){
             if(this.answears.compareChecked(this.correctAnswearList)){
-                this.questionLayout.setBackgroundColor(res.getColor(R.color.correct_answear_color));
+                this.questionTextView.setBackgroundColor(res.getColor(R.color.correct_answear_color));
             }
             else{
-                this.questionLayout.setBackgroundColor(res.getColor(R.color.wrong_answear_color));
+                this.questionTextView.setBackgroundColor(res.getColor(R.color.wrong_answear_color));
             }
         }
     }
