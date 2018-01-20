@@ -23,7 +23,10 @@
         android:orientation="vertical">
 
     </LinearLayout>
-
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="checkAnswears"/>
 
 
 </LinearLayout>
