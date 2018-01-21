@@ -1,7 +1,9 @@
 package com.shareandbuy.malvina.quizapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -74,12 +76,23 @@ public class MainActivity extends AppCompatActivity {
             block.verify();
         }
     }
+
+    public void sendResult(View view){
+        String body="";
+        for(QuestionBlock block : this.questionList){
+            body += block.getState();
+        }
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:"));
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Test subject");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, body);
+        startActivity(Intent.createChooser(emailIntent, "Chooser Title"));
+    }
 }
 
 class QuestionBlock{
     String question;
     String correctAnswer;
-    ArrayList<String> correctAnswerList;
+    ArrayList<String> correctAnswerList =  null;
     ArrayList<String> wrongAnswersList;
     boolean isRadioButton = false;
     boolean isCheckBox = false;
@@ -87,6 +100,10 @@ class QuestionBlock{
     LinearLayout questionLayout;
     int imageId = 0;
     TextView questionTextView;
+    boolean hasCorrectAnswer=false;
+    Context context;
+    Resources res;
+    String selectedAnswer;
 
     QuestionBlock(String question, String correctAnswear, ArrayList<String> wrongAnswearsList){
         this.question = question;
@@ -110,6 +127,8 @@ class QuestionBlock{
     void build(Context context, LinearLayout quizbody){
         //Define view we need to build a question
         this.questionLayout = (LinearLayout)LayoutInflater.from(context).inflate(R.layout.question_layout, null);
+        this.context = this.questionLayout.getContext();
+        this.res = context.getResources();
         ArrayList<String> answearsList = this.wrongAnswersList;
         this.questionTextView = (TextView)questionLayout.findViewWithTag(context.getString(R.string.tag_question));
         this.questionTextView.setText(this.question);
@@ -132,24 +151,50 @@ class QuestionBlock{
     }
 
     void verify(){
-        Context context = this.questionLayout.getContext();
-        Resources res = context.getResources();
+
         if(this.isRadioButton){
             if(this.answears.compareChecked(this.correctAnswer)){
-                this.questionTextView.setBackgroundColor(res.getColor(R.color.correct_answear_color));
+                this.questionTextView.setBackgroundColor(this.res.getColor(R.color.correct_answear_color));
+                this.hasCorrectAnswer=true;
             }
             else{
-                this.questionTextView.setBackgroundColor(res.getColor(R.color.wrong_answear_color));
+                this.questionTextView.setBackgroundColor(this.res.getColor(R.color.wrong_answear_color));
             }
         }
         if(this.isCheckBox){
             if(this.answears.compareChecked(this.correctAnswerList)){
-                this.questionTextView.setBackgroundColor(res.getColor(R.color.correct_answear_color));
+                this.questionTextView.setBackgroundColor(this.res.getColor(R.color.correct_answear_color));
+                this.hasCorrectAnswer=true;
             }
             else{
-                this.questionTextView.setBackgroundColor(res.getColor(R.color.wrong_answear_color));
+                this.questionTextView.setBackgroundColor(this.res.getColor(R.color.wrong_answear_color));
             }
         }
+    }
+
+    String getState(){
+        if(this.correctAnswerList != null) {
+            StringBuilder tempAnswerResult = new StringBuilder();
+            for (int i = 0; i <= this.correctAnswerList.size(); i++) {
+                tempAnswerResult.append(this.correctAnswerList.get(i));
+                if (i != this.correctAnswerList.size()) {
+                    tempAnswerResult.append("\n");
+                }
+            }
+            this.correctAnswer = tempAnswerResult.toString();
+        }
+
+        String resultString = this.res.getString(R.string.result_question) + ": " +
+                                "\n" + question +
+                                "\n" + this.res.getString(R.string.result_correct_answer) + ": " +
+                                "\n" + this.correctAnswer +
+                                "\n" + this.res.getString(R.string.result_selected_answer) + ": " +
+                                "\n" + answears.getSelectedAnswer();
+        return resultString;
+    }
+
+    boolean hasCorrectAnswer(){
+        return this.hasCorrectAnswer;
     }
 }
 
@@ -160,6 +205,7 @@ class Answers {
     Context context;
     ArrayList<RadioButton> radioButtonList;
     ArrayList<CheckBox> checkBoxList;
+    String selectedAnswer = "";
 
     Answers(RadioGroup group, ArrayList<String> answers){
         this.radioButtonList = new ArrayList<RadioButton>();
@@ -188,6 +234,7 @@ class Answers {
     boolean compareChecked(String correctAnswer){
         for (RadioButton button : this.radioButtonList){
             if (button.isChecked()) {
+                this.selectedAnswer = button.getText().toString();
                 if (button.getText().toString().equals(correctAnswer)) {
                     return true;
                 }
@@ -203,11 +250,24 @@ class Answers {
                 checkedAnswearsList.add(checkBox.getText().toString());
             }
         }
+        StringBuilder tempAnswerResult = new StringBuilder();
+        for(int i = 0; i<checkedAnswearsList.size(); i++){
+            tempAnswerResult.append(checkedAnswearsList.get(i));
+            if(i!=(checkedAnswearsList.size()-1)){
+                tempAnswerResult.append("\n");
+            }
+        }
+        this.selectedAnswer = tempAnswerResult.toString();
         Collections.sort(checkedAnswearsList);
         Collections.sort(correctAnswers);
         if(checkedAnswearsList.equals(correctAnswers)){
             return true;
         }
         return false;
+    }
+    String getSelectedAnswer(){
+        if(this.selectedAnswer.isEmpty())
+            return this.context.getResources().getString(R.string.result_nothing);
+        else return this.selectedAnswer;
     }
 }
