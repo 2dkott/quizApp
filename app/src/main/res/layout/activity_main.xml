@@ -53,10 +53,20 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/question_margin"
             android:background="@color/title_background"
             android:textStyle="bold"
             android:text="@string/verify"
             android:textColor="@color/title_text"
             android:onClick="checkAnswears"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/question_margin"
+            android:background="@color/title_background"
+            android:textStyle="bold"
+            android:text="@string/send"
+            android:textColor="@color/title_text"
+            android:onClick="sendResult"/>
     </LinearLayout>
 </ScrollView>
