@@ -40,4 +40,5 @@
     <string name="result_selected_answer">Selected answers</string>
     <string name="result_correct_answer">Correct answers</string>
     <string name="result_nothing">NOTHING WAS SELECTED</string>
+    <string name="check_answers_first">Please, verify answers first!</string>
 </resources>
