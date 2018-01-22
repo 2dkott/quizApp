@@ -9,7 +9,7 @@
     <string name="verify">verify</string>
     <string name="send">send results</string>
     <string name="q_1_text">What is the story of Star Wars?</string>
-    <string name="q_1_correct_answear">The prostitution of the Jedi and the Sith</string>
+    <string name="q_1_correct_answear">The confrontation of the Jedi and the Sith</string>
     <string-array name="q_1_wrong_answears">
         <item>The struggle between the Sun and Alpha Centauri.</item>
         <item>The fight between Bruce Willis and Mad Damond.</item>
@@ -21,11 +21,11 @@
         <item>A Cyber-Ninja-Samurai.</item>
     </string-array>
     <string name="q_3_text">What phrases will never be heard from Yoda?</string>
-    <string-array name="q_3_correct_answears">
+    <string-array name="q_3_wrong_answears">
         <item>Judge me by my size, do you?</item>
         <item>Do. Or do not. There is no try.</item>
     </string-array>
-    <string-array name="q_3_wrong_answears">
+    <string-array name="q_3_correct_answears">
         <item>YOUR SOUL IS MINE!!!</item>
         <item>...Bond. James Bond.</item>
         <item>Why so serious?</item>
