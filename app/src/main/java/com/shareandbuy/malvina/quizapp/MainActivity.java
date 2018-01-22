@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,6 +22,7 @@ import java.util.Collections;
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<QuestionBlock> questionList = new ArrayList<QuestionBlock>();
+    boolean quizIsVerified = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +73,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Verify answers
     public void checkAnswears(View view){
+        quizIsVerified = true;
         for(QuestionBlock block : questionList){
             block.verify();
         }
     }
 
     public void sendResult(View view){
+        if(!quizIsVerified){
+            Toast toast = Toast.makeText(this, getString(R.string.check_answers_first), Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
         String body="";
         for(QuestionBlock block : this.questionList){
             body += block.getState();
@@ -90,21 +99,19 @@ public class MainActivity extends AppCompatActivity {
 }
 
 class QuestionBlock{
-    String question;
-    String correctAnswer;
-    ArrayList<String> correctAnswerList =  null;
-    ArrayList<String> wrongAnswersList;
-    boolean isRadioButton = false;
-    boolean isCheckBox = false;
-    Answers answears;
-    LinearLayout questionLayout;
-    int imageId = 0;
-    TextView questionTextView;
-    boolean hasCorrectAnswer=false;
-    Context context;
-    Resources res;
-    String selectedAnswer;
+    private String question;
+    private String correctAnswer;
+    private ArrayList<String> correctAnswerList =  null;
+    private ArrayList<String> wrongAnswersList;
+    private boolean isRadioButton = false;
+    private boolean isCheckBox = false;
+    private Answers answears;
+    private LinearLayout questionLayout;
+    private int imageId = 0;
+    private TextView questionTextView;
+    private Resources res;
 
+    //Build question with radio button group of answers
     QuestionBlock(String question, String correctAnswear, ArrayList<String> wrongAnswearsList){
         this.question = question;
         this.correctAnswer = correctAnswear;
@@ -112,6 +119,7 @@ class QuestionBlock{
         this.isRadioButton = true;
     }
 
+    //Build question with checkbox group of answers
     QuestionBlock(String question, ArrayList<String> correctAnswearList, ArrayList<String> wrongAnswearsList){
         this.question = question;
         this.correctAnswerList = correctAnswearList;
@@ -119,28 +127,41 @@ class QuestionBlock{
         this.isCheckBox = true;
     }
 
+    //Setting image of question
     QuestionBlock addImage(int imageId){
         this.imageId = imageId;
         return this;
     }
 
     void build(Context context, LinearLayout quizbody){
-        //Define view we need to build a question
+        //Define views we need to build a question bloc
+
+        //Setting basic question block
         this.questionLayout = (LinearLayout)LayoutInflater.from(context).inflate(R.layout.question_layout, null);
-        this.context = this.questionLayout.getContext();
+
+        //Getting assess to Resources through current context
         this.res = context.getResources();
-        ArrayList<String> answearsList = this.wrongAnswersList;
+
+        //Setting container for question text
         this.questionTextView = (TextView)questionLayout.findViewWithTag(context.getString(R.string.tag_question));
         this.questionTextView.setText(this.question);
+
+        //Setting image container for question
         ImageView image = (ImageView)questionLayout.findViewWithTag(context.getString(R.string.tag_question_image));
         if(this.imageId!=0){
             image.setImageResource(this.imageId);
         }
+
+        //Building question block for question
+        ArrayList<String> answearsList = this.wrongAnswersList;
+
+        //In case of radio group we have onle one correct answer
         if(this.isRadioButton) {
             answearsList.add(this.correctAnswer);
             this.answears = new Answers((RadioGroup)questionLayout.findViewWithTag(context.getString(R.string.tag_question_radio_button_group))
                                    , answearsList);
         }
+        //In case of checkbox group we could have a few correct answers
         if(this.isCheckBox) {
             answearsList.addAll(correctAnswerList);
             this.answears = new Answers((LinearLayout)questionLayout.findViewWithTag(context.getString(R.string.tag_question_checkbox_group))
@@ -151,20 +172,20 @@ class QuestionBlock{
     }
 
     void verify(){
-
+        //Correct answer is marked with green color and wrong one with rose
+        //Checking that answer block is group of radio buttons, so correct answer is a single one
         if(this.isRadioButton){
             if(this.answears.compareChecked(this.correctAnswer)){
                 this.questionTextView.setBackgroundColor(this.res.getColor(R.color.correct_answear_color));
-                this.hasCorrectAnswer=true;
             }
             else{
                 this.questionTextView.setBackgroundColor(this.res.getColor(R.color.wrong_answear_color));
             }
         }
+        //Checking that answer block is group of checkboxes, so it might be a few correct answers
         if(this.isCheckBox){
             if(this.answears.compareChecked(this.correctAnswerList)){
                 this.questionTextView.setBackgroundColor(this.res.getColor(R.color.correct_answear_color));
-                this.hasCorrectAnswer=true;
             }
             else{
                 this.questionTextView.setBackgroundColor(this.res.getColor(R.color.wrong_answear_color));
@@ -173,9 +194,12 @@ class QuestionBlock{
     }
 
     String getState(){
+        //Getting info of question like question text, correct answers and selected answers
+        //In case of radio button group we already have single string but for list of correct answers(checkbox group)
+        //we have a list of correct answers
         if(this.correctAnswerList != null) {
             StringBuilder tempAnswerResult = new StringBuilder();
-            for (int i = 0; i <= this.correctAnswerList.size(); i++) {
+            for (int i = 0; i < this.correctAnswerList.size(); i++) {
                 tempAnswerResult.append(this.correctAnswerList.get(i));
                 if (i != this.correctAnswerList.size()) {
                     tempAnswerResult.append("\n");
@@ -183,30 +207,26 @@ class QuestionBlock{
             }
             this.correctAnswer = tempAnswerResult.toString();
         }
-
-        String resultString = this.res.getString(R.string.result_question) + ": " +
-                                "\n" + question +
-                                "\n" + this.res.getString(R.string.result_correct_answer) + ": " +
-                                "\n" + this.correctAnswer +
-                                "\n" + this.res.getString(R.string.result_selected_answer) + ": " +
-                                "\n" + answears.getSelectedAnswer();
-        return resultString;
-    }
-
-    boolean hasCorrectAnswer(){
-        return this.hasCorrectAnswer;
+        //Building a sing string of question details
+        return this.res.getString(R.string.result_question) + ": " +
+                "\n" + question +
+                "\n" + this.res.getString(R.string.result_correct_answer) + ": " +
+                "\n" + this.correctAnswer +
+                "\n" + this.res.getString(R.string.result_selected_answer) + ": " +
+                "\n" + answears.getSelectedAnswersText() + "\n";
     }
 }
 
 class Answers {
 
-    RadioGroup radioGroup = null;
-    LinearLayout checkboxGroup = null;
-    Context context;
-    ArrayList<RadioButton> radioButtonList;
-    ArrayList<CheckBox> checkBoxList;
-    String selectedAnswer = "";
+    private RadioGroup radioGroup = null;
+    private LinearLayout checkboxGroup = null;
+    private Context context;
+    private ArrayList<RadioButton> radioButtonList;
+    private ArrayList<CheckBox> checkBoxList;
+    private String selectedAnswer = "";
 
+    //Build answer block as radio button group
     Answers(RadioGroup group, ArrayList<String> answers){
         this.radioButtonList = new ArrayList<RadioButton>();
         this.context = group.getContext();
@@ -218,7 +238,7 @@ class Answers {
             group.addView(temp_button);
         }
     }
-
+    //Build answer block as checkbox group
     Answers(LinearLayout group, ArrayList<String> answers){
         this.checkBoxList = new ArrayList<CheckBox>();
         this.context = group.getContext();
@@ -231,6 +251,7 @@ class Answers {
         }
     }
 
+    //Compare correct answer with answer was checked if it is same it return true else false
     boolean compareChecked(String correctAnswer){
         for (RadioButton button : this.radioButtonList){
             if (button.isChecked()) {
@@ -243,6 +264,7 @@ class Answers {
         return false;
     }
 
+    //Compare correct answer list with a list of answers were checked if it is same it return true else false
     boolean compareChecked(ArrayList<String> correctAnswers){
         ArrayList<String> checkedAnswearsList = new ArrayList<String>();
         for (CheckBox checkBox : this.checkBoxList) {
@@ -265,7 +287,9 @@ class Answers {
         }
         return false;
     }
-    String getSelectedAnswer(){
+
+    //Return a text of selected answer
+    String getSelectedAnswersText(){
         if(this.selectedAnswer.isEmpty())
             return this.context.getResources().getString(R.string.result_nothing);
         else return this.selectedAnswer;
