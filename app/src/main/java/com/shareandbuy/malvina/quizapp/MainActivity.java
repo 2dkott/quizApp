@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -80,17 +81,28 @@ public class MainActivity extends AppCompatActivity {
             block.verify();
         }
     }
-
+    //Collecting statistic of questions and send it to email app
     public void sendResult(View view){
+        EditText userNameView = (EditText)findViewById(R.id.user_name);
+        if(userNameView.getText().toString().isEmpty()){
+            Toast toast = Toast.makeText(this, getString(R.string.check_user_name_first), Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
         if(!quizIsVerified){
             Toast toast = Toast.makeText(this, getString(R.string.check_answers_first), Toast.LENGTH_SHORT);
             toast.show();
             return;
         }
-        String body="";
+        StringBuilder strBuilder = new StringBuilder();
+        strBuilder.append(userNameView.getText().toString());
+        strBuilder.append(getString(R.string.result_title));
+        strBuilder.append("\n\n");
         for(QuestionBlock block : this.questionList){
-            body += block.getState();
+            strBuilder.append(block.getState());
+            strBuilder.append("\n");
         }
+        String body= strBuilder.toString();
         Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:"));
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Test subject");
         emailIntent.putExtra(Intent.EXTRA_TEXT, body);
@@ -198,23 +210,41 @@ class QuestionBlock{
         //In case of radio button group we already have single string but for list of correct answers(checkbox group)
         //we have a list of correct answers
         if(this.correctAnswerList != null) {
-            StringBuilder tempAnswerResult = new StringBuilder();
+            StringBuilder strBuilder = new StringBuilder();
             for (int i = 0; i < this.correctAnswerList.size(); i++) {
-                tempAnswerResult.append(this.correctAnswerList.get(i));
-                if (i != this.correctAnswerList.size()) {
-                    tempAnswerResult.append("\n");
+                strBuilder.append("\"");
+                strBuilder.append(this.correctAnswerList.get(i));
+                strBuilder.append("\"");
+                if (i != (this.correctAnswerList.size()-1)) {
+                    strBuilder.append("\n");
                 }
             }
-            this.correctAnswer = tempAnswerResult.toString();
+            this.correctAnswer = strBuilder.toString();
         }
-        //Building a sing string of question details
-        return this.res.getString(R.string.result_question) + ": " +
-                "\n" + question +
-                "\n" + this.res.getString(R.string.result_correct_answer) + ": " +
-                "\n" + this.correctAnswer +
-                "\n" + this.res.getString(R.string.result_selected_answer) + ": " +
-                "\n" + answears.getSelectedAnswersText() + "\n";
-    }
+        else this.correctAnswer = "\"" + this.correctAnswer + "\"";
+
+        //Building a single string of question details
+        StringBuilder strBuilder = new StringBuilder();
+        strBuilder.append(this.res.getString(R.string.result_question));
+        strBuilder.append(": ");
+        strBuilder.append("\n");
+        strBuilder.append("\"");
+        strBuilder.append(this.question);
+        strBuilder.append("\"");
+        strBuilder.append("\n");
+        strBuilder.append(this.res.getString(R.string.result_correct_answer));
+        strBuilder.append(": ");
+        strBuilder.append("\n");
+        strBuilder.append(this.correctAnswer);
+        strBuilder.append("\n");
+        strBuilder.append(this.res.getString(R.string.result_selected_answer));
+        strBuilder.append(": ");
+        strBuilder.append("\n");
+        strBuilder.append(answears.getSelectedAnswersText());
+        strBuilder.append("\n");
+
+        return strBuilder.toString();
+     }
 }
 
 class Answers {
@@ -255,7 +285,7 @@ class Answers {
     boolean compareChecked(String correctAnswer){
         for (RadioButton button : this.radioButtonList){
             if (button.isChecked()) {
-                this.selectedAnswer = button.getText().toString();
+                this.selectedAnswer = "\"" + button.getText().toString() + "\"";
                 if (button.getText().toString().equals(correctAnswer)) {
                     return true;
                 }
@@ -272,14 +302,16 @@ class Answers {
                 checkedAnswearsList.add(checkBox.getText().toString());
             }
         }
-        StringBuilder tempAnswerResult = new StringBuilder();
+        StringBuilder strBuilder = new StringBuilder();
         for(int i = 0; i<checkedAnswearsList.size(); i++){
-            tempAnswerResult.append(checkedAnswearsList.get(i));
+            strBuilder.append("\"");
+            strBuilder.append(checkedAnswearsList.get(i));
+            strBuilder.append("\"");
             if(i!=(checkedAnswearsList.size()-1)){
-                tempAnswerResult.append("\n");
+                strBuilder.append("\n");
             }
         }
-        this.selectedAnswer = tempAnswerResult.toString();
+        this.selectedAnswer = strBuilder.toString();
         Collections.sort(checkedAnswearsList);
         Collections.sort(correctAnswers);
         if(checkedAnswearsList.equals(correctAnswers)){
