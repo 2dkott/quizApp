@@ -12,7 +12,7 @@
     <string name="q_1_correct_answear">The confrontation of the Jedi and the Sith</string>
     <string-array name="q_1_wrong_answears">
         <item>The struggle between the Sun and Alpha Centauri.</item>
-        <item>The fight between Bruce Willis and Mad Damond.</item>
+        <item>The fight between Bruce Willis and Matt Damon.</item>
     </string-array>
     <string name="q_2_text">Who is Darth Vader</string>
     <string name="q_2_correct_answear">A powerful Sith Lord.</string>
