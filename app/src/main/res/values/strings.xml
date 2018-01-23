@@ -41,4 +41,6 @@
     <string name="result_correct_answer">Correct answers</string>
     <string name="result_nothing">NOTHING WAS SELECTED</string>
     <string name="check_answers_first">Please, verify answers first!</string>
+    <string name="check_user_name_first">Please, add your name.</string>
+    <string name="result_title">\' Star Wars Quiz Results</string>
 </resources>
